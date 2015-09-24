@@ -1,0 +1,17 @@
+{
+	"folders":
+	[
+		{
+			"path": ".",
+			"folder_exclude_patterns": ["node_modules"],
+		},
+	],
+	"build_systems":
+	[
+		{
+			"name": "Build",
+			"working_dir": "${project_path}",
+			"cmd": ["node", ".\\node_modules\\grunt-cli\\bin\\grunt", "screeps"],
+		},
+	],
+}
