@@ -34,7 +34,7 @@ function attackAction (creep) {
 		});
 
 		if (leader) {
-			creep.moveToRange(leader, 1);
+			creep.moveToRange(leader, 2);
 		} else {
 			// No leader: return to base.
 			creep.moveToSpawn(2);
