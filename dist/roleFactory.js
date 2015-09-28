@@ -18,21 +18,24 @@ function getNextRole (room) {
 	// Define the order in which creeps should spawn. Once 'count' number of
 	// creeps of type 'role' exist in the room, move onto the next item in the
 	// array.
+	if (!room) {
+		return;
+	}
+
 	const order = [
 		{ "role": "miner",    "count": 1 },
 		{ "role": "carrier",  "count": 1 },
-		{ "role": "leader",   "count": 1 },
-		{ "role": "healer",   "count": 1 },
-		{ "role": "attacker", "count": 2 },
 		{ "role": "miner",    "count": 2 },
+		{ "role": "leader",   "count": 1 },
 		{ "role": "carrier",  "count": 2 },
+		{ "role": "healer",   "count": 1 },
 		{ "role": "archer",   "count": 2 },
-		/* { "role": "miner",   "count": 3 },
-		{ "role": "carrier", "count": 3 },*/
+		// { "role": "attacker", "count": 1 },
+		{ "role": "upgrader", "count": 1 },
 	];
 
-	const creeps = _.values(Game.creeps).filter(x => !x.spawning && x.pos.roomName === room.name);
-	const types = _.groupBy(creeps, x => x.memory.role);
+	const creeps = _.values(Game.creeps).filter(x => x && x.room && x.room.name === room.name);
+	const types = _.groupBy(creeps, x => x && x.memory && x.memory.role);
 	for (const item of order) {
 		if (!types[item.role] || types[item.role].length < item.count) {
 			return item.role;
