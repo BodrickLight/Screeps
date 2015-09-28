@@ -6,6 +6,12 @@
 
 require("creepExt");
 const roleFactory = require("roleFactory");
+const constructionPlanner = require("constructionPlanner");
+
+// Handle any new constructions.
+for (const roomId in Game.rooms) {
+	constructionPlanner.handleConstruction(Game.rooms[roomId]);
+}
 
 // See if there's any new creeps that should be spawned.
 for (const spawn of _.values(Game.spawns)) {

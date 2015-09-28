@@ -44,7 +44,7 @@ function carryAction (creep) {
 			return;
 		}
 
-		creep.moveToRange(target, 0);
+		creep.moveToRange(target, 1);
 		creep.pickup(target);
 	} else {
 		// Full on energy - return to base to drop it off.

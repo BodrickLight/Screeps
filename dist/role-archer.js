@@ -19,39 +19,30 @@ module.exports = require("role-base")({
  * @param {Creep} creep The creep that should behave as an archer.
  */
 function archAction (creep) {
-	const target = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3, {
+	const target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
 		"filter": x => x.owner.username !== "Source Keeper",
-	})[0];
+	});
 
 	if (target) {
-		// Attack the nearest target.
-		creep.rangedAttack(target);
-		return;
-	}
+		// Move to the closest rampart to the target.
+		const rampart = target.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+			"filter": x => x.structureType === STRUCTURE_RAMPART
+				&& (x.pos.isEqualTo(creep) || !x.pos.lookFor("creep").length)
+				&& !x.progressTotal,
+		});
+		if (rampart) {
+			creep.moveTo(rampart);
+		} else if (creep.pos.inRangeTo(target.pos, 6)) {
+			creep.moveToRange(target, 3);
+		};
 
-	// If in a rampart, stay here and guard it.
-	if (creep.pos.lookFor("structure").some(x => x.structureType === STRUCTURE_RAMPART)) {
-		return;
-	}
-
-	// Find an empty rampart.
-	const rampart = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-		"filter": x => x.structureType === STRUCTURE_RAMPART && !x.pos.lookFor("creep").length,
-	});
-	if (rampart) {
-		creep.moveTo(rampart);
-		return;
-	};
-
-	// Return to nearest leader.
-	const leader = creep.pos.findClosestByRange(FIND_MY_CREEPS, {
-		"filter": x => x.memory.role === "leader",
-	});
-
-	if (leader) {
-		creep.moveToRange(leader, 1);
-	} else {
-		// No leader: return to base.
-		creep.moveToSpawn(2);
+		if (creep.pos.inRangeTo(target.pos, 3)) {
+			// Attack the nearest target.
+			if (creep.pos.inRangeTo(target.pos, 1)) {
+				creep.rangedMassAttack(target);
+			} else {
+				creep.rangedAttack(target);
+			}
+		}
 	}
 }

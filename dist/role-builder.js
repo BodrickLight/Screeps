@@ -26,21 +26,49 @@ function buildAction (creep) {
 		return;
 	}
 
-	// If any structures are below 50% health, repair them.
-	const broken = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-		"filter": x => x.hits / x.hitsMax < 0.5,
-	});
+	// If any structures are below 3000 hitpoints, repair them.
+	let broken;
+	if (creep.memory.targetRepair) {
+		broken = Game.getObjectById(creep.memory.targetRepair);
+	} else {
+		broken = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+			"filter": x => x.hits < 3000,
+		});
+		if (broken) {
+			creep.say("Repair");
+			creep.memory.targetRepair = broken.id;
+		}
+	}
+
 	if (broken) {
 		creep.moveToRange(broken, 1);
 		creep.repair(broken);
+		if (broken.hits >= 5000 || broken.hits === broken.hitsMax) {
+			delete creep.memory.targetRepair;
+		}
+
+		return;
 	}
 
 	// If there's anything to build, build it.
-	const toBuild = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+	let toBuild;
+	if (creep.memory.targetBuild) {
+		toBuild = Game.getObjectById(creep.memory.targetBuild);
+	} else {
+		toBuild = creep.room.find(FIND_CONSTRUCTION_SITES)[0];
+		if (toBuild) {
+			creep.say("Build");
+			creep.memory.targetBuild = toBuild.id;
+		}
+	}
+
 	if (toBuild) {
 		creep.moveToRange(toBuild, 1);
 		creep.build(toBuild);
+		return;
 	}
+
+	delete creep.memory.targetBuild;
 
 	// Otherwise, return to base.
 	creep.moveToSpawn(2);
