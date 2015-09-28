@@ -26,17 +26,32 @@ function archAction (creep) {
 	if (target) {
 		// Attack the nearest target.
 		creep.rangedAttack(target);
-	} else {
-		// Return to nearest leader.
-		const leader = creep.pos.findClosestByRange(FIND_MY_CREEPS, {
-			"filter": x => x.memory.role === "leader",
-		});
+		return;
+	}
 
-		if (leader) {
-			creep.moveToRange(leader, 1);
-		} else {
-			// No leader: return to base.
-			creep.moveToSpawn(2);
-		}
+	// If in a rampart, stay here and guard it.
+	if (creep.pos.lookFor("structure").some(x => x.structureType === STRUCTURE_RAMPART)) {
+		return;
+	}
+
+	// Find an empty rampart.
+	const rampart = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+		"filter": x => x.structureType === STRUCTURE_RAMPART && !x.pos.lookFor("creep").length,
+	});
+	if (rampart) {
+		creep.moveTo(rampart);
+		return;
+	};
+
+	// Return to nearest leader.
+	const leader = creep.pos.findClosestByRange(FIND_MY_CREEPS, {
+		"filter": x => x.memory.role === "leader",
+	});
+
+	if (leader) {
+		creep.moveToRange(leader, 1);
+	} else {
+		// No leader: return to base.
+		creep.moveToSpawn(2);
 	}
 }

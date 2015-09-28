@@ -19,9 +19,9 @@ module.exports = require("role-base")({
  * @param {Creep} creep The creep that should behave as a leader.
  */
 function leadAction (creep) {
-	const target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS, {
+	const target = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 10, {
 		"filter": x => x.owner.username !== "Source Keeper",
-	});
+	})[0];
 
 	if (target) {
 		// Attack the nearest target.
