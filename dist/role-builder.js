@@ -29,58 +29,54 @@ const buildOrder = [
 function buildAction (creep) {
 	if (!creep.carry.energy) {
 		// Return to spawn to get energy.
+		delete creep.memory.target;
 		creep.moveToSpawn(1);
 		const spawn = creep.getSpawn();
 		spawn.transferEnergy(creep);
 		return;
 	}
 
-	// If any structures are below 1000 hitpoints, repair them.
-	let broken;
-	if (creep.memory.targetRepair) {
-		broken = Game.getObjectById(creep.memory.targetRepair);
-	} else {
-		broken = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-			"filter": x => x.hits < 1000,
-		});
-		if (broken) {
-			creep.say("Repair");
-			creep.memory.targetRepair = broken.id;
+	if (creep.memory.target) {
+		// Continue doing our previous job.
+		const target = Game.getObjectById(creep.memory.target.id);
+		const action = creep.memory.target.action;
+		if (!target || (action === "repair" && (target.hits >= 3000 || target.hits === target.hitsMax))) {
+			// We're done; find something else to do.
+			delete creep.memory.target;
+			buildAction(creep);
+			return;
 		}
+
+		creep.moveToRange(target, 1);
+		if (action === "repair") {
+			creep.repair(target);
+		} else {
+			creep.build(target);
+		}
+		return;
 	}
 
+	// If any structures are below 1000 hitpoints, repair them.
+	const broken = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+		"filter": x => x.hits < 1000 && x.hits !== x.hitsMax,
+	});
 	if (broken) {
-		creep.moveToRange(broken, 1);
-		creep.repair(broken);
-		if (broken.hits >= 3000 || broken.hits === broken.hitsMax) {
-			delete creep.memory.targetRepair;
-		}
-
+		creep.say(`repair ${broken.structureType}`);
+		creep.memory.target = { "id": broken.id, "action": "repair" };
+		buildAction(creep);
 		return;
 	}
 
 	// If there's anything to build, build it.
-	let toBuild;
-	if (creep.memory.targetBuild) {
-		toBuild = Game.getObjectById(creep.memory.targetBuild);
-	} else {
-		toBuild = _.sortBy(creep.room.find(FIND_CONSTRUCTION_SITES),
-			x => _.indexOf(buildOrder, x.structureType))[0];
-
-		if (toBuild) {
-			creep.say("Build");
-			creep.memory.targetBuild = toBuild.id;
-		}
-	}
-
+	const toBuild = _.sample(creep.room.find(FIND_CONSTRUCTION_SITES));
 	if (toBuild) {
-		creep.moveToRange(toBuild, 1);
-		creep.build(toBuild);
+		creep.say(`build ${toBuild.structureType}`);
+		creep.memory.target = { "id": toBuild.id, "action": "build" };
+		buildAction(creep);
 		return;
 	}
 
-	delete creep.memory.targetBuild;
-
-	// Otherwise, return to base.
-	creep.moveToSpawn(2);
+	// Move to the room controller to upgrade it.
+	creep.moveToRange(creep.room.controller, 1);
+	creep.upgradeController(creep.room.controller);
 }

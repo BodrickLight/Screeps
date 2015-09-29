@@ -39,6 +39,7 @@ module.exports = function (cfg) {
 	 * @param {Creep} creep The creep that is performing the action.
 	 */
 	function action (creep) {
+		const t1 = new Date().getTime();
 		// If a creep has just spawned, make it say its role.
 		if (!creep.spawning && creep.memory && creep.memory.justSpawned) {
 			creep.say(creep.memory.role);
@@ -57,5 +58,9 @@ module.exports = function (cfg) {
 		}
 
 		cfg.action(creep);
+		const t2 = new Date().getTime();
+		if ((t2 - t1) > 3) {
+			console.log(`${creep.memory.role}: ${t2 - t1}ms`);
+		}
 	}
 };

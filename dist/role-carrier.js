@@ -1,6 +1,6 @@
 /**
  * @file Carrier role definition.
- * @summary Carriers transport energy from the ground to a spawn.
+ * @summary Carriers transport energy from a miner to a spawn.
  * @author Dom Light
  * @license MIT
  */
@@ -20,14 +20,18 @@ module.exports = require("role-base")({
  */
 function carryAction (creep) {
 	if (!creep.memory.target) {
-		// Find some energy on the ground to carry.
-		const targets = creep.room.find(FIND_DROPPED_ENERGY, {
-			"filter": s => true,
+		// Associate ourselves with a miner.
+		const carriers = _.filter(Game.creeps, x => x.memory.role === "carrier"
+			&& x.memory.target);
+
+		const usedTargets = carriers.map(x => Game.getObjectById(x.memory.target.id));
+
+		const target = creep.pos.findClosestByRange(FIND_MY_CREEPS, {
+			"filter": s => s.memory.role === "miner" && usedTargets.indexOf(s) === -1,
 		});
 
-		const target = targets[0];
 		if (!target) {
-			// No available energy to carry.
+			// No available miners.
 			return;
 		}
 
@@ -38,14 +42,15 @@ function carryAction (creep) {
 		// Can still carry more energy, move to the target to pick it up.
 		const target = Game.getObjectById(creep.memory.target.id);
 		if (!target) {
-			// The energy no longer exists. Try to find some more.
+			// Our miner no longer exists. Try to find another.
 			delete creep.memory.target;
 			carryAction(creep);
 			return;
 		}
 
 		creep.moveToRange(target, 1);
-		creep.pickup(target);
+		const energy = target.pos.lookFor("energy")[0];
+		creep.pickup(energy);
 	} else {
 		// Full on energy - return to base to drop it off.
 		creep.moveToSpawn(1);

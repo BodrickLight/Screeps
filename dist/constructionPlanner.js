@@ -13,9 +13,9 @@ module.exports = {
  * @param {Room} room The room in which construction should be managed.
  */
 function handleConstruction (room) {
-	if (room.controller.level >= 2) {
+	if (room.controller.level >= 2 && !(Game.time % 10)) {
 		placeRamparts(room);
-		placeExtensions(room);
+		// placeExtensions(room);
 	}
 }
 
@@ -26,7 +26,8 @@ function handleConstruction (room) {
 function placeRamparts (room) {
 	const spawns = room.find(FIND_MY_SPAWNS);
 	for (const spawn of spawns) {
-		constructAroundRange(room, spawn.pos, 3, STRUCTURE_RAMPART);
+		constructAroundRange(room, spawn.pos, 5, STRUCTURE_RAMPART);
+		// constructAroundRange(room, spawn.pos, 6, STRUCTURE_RAMPART);
 	}
 }
 
@@ -37,7 +38,7 @@ function placeRamparts (room) {
 function placeExtensions (room) {
 	const spawns = room.find(FIND_MY_SPAWNS);
 	for (const spawn of spawns) {
-		constructAroundRange(room, spawn.pos, 1, STRUCTURE_EXTENSION);
+		constructAroundRange(room, spawn.pos, 2, STRUCTURE_EXTENSION);
 	}
 }
 

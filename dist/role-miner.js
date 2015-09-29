@@ -1,7 +1,7 @@
 /**
  * @file Miner role definition.
- * @summary Miners move to a nearby source, then mine its energy and drop it
- * on the ground for a carrier to collect.
+ * @summary Miners move to a suitable nearby source, then mine its energy and
+ * drop it on the ground for a carrier to collect.
  * @author Dom Light
  * @license MIT
  */
@@ -20,10 +20,13 @@ module.exports = require("role-base")({
  */
 function mineAction (creep) {
 	if (!creep.memory.source) {
-		// Find an available source.
-		const target = creep.pos.findClosestByRange(FIND_SOURCES, {
-			"filter": s => true,
-		});
+		// Find a suitable source.
+		const miners = _.filter(Game.creeps, x => x.memory.role === "miner" && x.memory.source);
+		const sources = miners.map(x => x.memory.source.id);
+
+		const target = creep.room.find(FIND_SOURCES, {
+			"filter": s => sources.filter(y => y === s.id).length < 2,
+		})[0];
 
 		creep.memory.source = { "id": target.id };
 	}
