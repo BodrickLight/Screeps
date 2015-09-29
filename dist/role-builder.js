@@ -13,6 +13,15 @@ module.exports = require("role-base")({
 	"action": buildAction,
 });
 
+const buildOrder = [
+	STRUCTURE_RAMPART,
+	STRUCTURE_WALL,
+	STRUCTURE_EXTENSION,
+	STRUCTURE_STORAGE,
+	STRUCTURE_ROAD,
+	STRUCTURE_LINK,
+];
+
 /**
  * Makes the specified creep behave as a builder.
  * @param {Creep} creep The creep that should behave as a builder.
@@ -26,13 +35,13 @@ function buildAction (creep) {
 		return;
 	}
 
-	// If any structures are below 3000 hitpoints, repair them.
+	// If any structures are below 1000 hitpoints, repair them.
 	let broken;
 	if (creep.memory.targetRepair) {
 		broken = Game.getObjectById(creep.memory.targetRepair);
 	} else {
 		broken = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-			"filter": x => x.hits < 3000,
+			"filter": x => x.hits < 1000,
 		});
 		if (broken) {
 			creep.say("Repair");
@@ -43,7 +52,7 @@ function buildAction (creep) {
 	if (broken) {
 		creep.moveToRange(broken, 1);
 		creep.repair(broken);
-		if (broken.hits >= 5000 || broken.hits === broken.hitsMax) {
+		if (broken.hits >= 3000 || broken.hits === broken.hitsMax) {
 			delete creep.memory.targetRepair;
 		}
 
@@ -55,7 +64,9 @@ function buildAction (creep) {
 	if (creep.memory.targetBuild) {
 		toBuild = Game.getObjectById(creep.memory.targetBuild);
 	} else {
-		toBuild = creep.room.find(FIND_CONSTRUCTION_SITES)[0];
+		toBuild = _.sortBy(creep.room.find(FIND_CONSTRUCTION_SITES),
+			x => _.indexOf(buildOrder, x.structureType))[0];
+
 		if (toBuild) {
 			creep.say("Build");
 			creep.memory.targetBuild = toBuild.id;

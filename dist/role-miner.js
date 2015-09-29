@@ -21,11 +21,11 @@ module.exports = require("role-base")({
 function mineAction (creep) {
 	if (!creep.memory.source) {
 		// Find an available source.
-		const targets = creep.room.find(FIND_SOURCES, {
+		const target = creep.pos.findClosestByRange(FIND_SOURCES, {
 			"filter": s => true,
 		});
 
-		creep.memory.source = { "id": targets[0].id };
+		creep.memory.source = { "id": target.id };
 	}
 
 	// Move to the source, and start mining it.

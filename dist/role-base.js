@@ -45,6 +45,17 @@ module.exports = function (cfg) {
 			creep.memory.justSpawned = false;
 		}
 
+		if (!creep.body.some(x => x.type === ATTACK || x.type === RANGED_ATTACK || x.type === HEAL)) {
+			// This is a 'civilian' creep - if there's any enemies nearby, just return
+			// to spawn.
+			if (creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4, {
+				"filter": x => x.body.some(y => y.type === ATTACK || y.type === RANGED_ATTACK),
+			}).length) {
+				creep.moveToSpawn(2);
+				return;
+			}
+		}
+
 		cfg.action(creep);
 	}
 };

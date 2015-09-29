@@ -15,6 +15,7 @@ module.exports = {
 function handleConstruction (room) {
 	if (room.controller.level >= 2) {
 		placeRamparts(room);
+		placeExtensions(room);
 	}
 }
 
@@ -26,6 +27,17 @@ function placeRamparts (room) {
 	const spawns = room.find(FIND_MY_SPAWNS);
 	for (const spawn of spawns) {
 		constructAroundRange(room, spawn.pos, 3, STRUCTURE_RAMPART);
+	}
+}
+
+/**
+ * Places extensions in the given room.
+ * @param {Room} room The room in which the extensions should be placed.
+ */
+function placeExtensions (room) {
+	const spawns = room.find(FIND_MY_SPAWNS);
+	for (const spawn of spawns) {
+		constructAroundRange(room, spawn.pos, 1, STRUCTURE_EXTENSION);
 	}
 }
 
@@ -43,7 +55,7 @@ function constructAroundRange (room, center, range, type) {
 		for (let y = center.y - range; y <= center.y + range; y++) {
 			if (Math.abs(center.x - x) === range
 				|| Math.abs(center.y - y) === range) {
-				room.createConstructionSite(x, y, STRUCTURE_RAMPART);
+				room.createConstructionSite(x, y, type);
 			}
 		}
 	}
