@@ -10,7 +10,8 @@ module.exports = require("role-base")({
 	"definitions": [
 		[ WORK, WORK, CARRY, MOVE ],
 	],
-	"action": buildAction,
+	"action":   buildAction,
+	"retreats": false,
 });
 
 const buildOrder = [

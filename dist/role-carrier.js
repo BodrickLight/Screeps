@@ -11,7 +11,8 @@ module.exports = require("role-base")({
 		[ CARRY, MOVE, CARRY, MOVE ],
 		[ CARRY, MOVE ],
 	],
-	"action": carryAction,
+	"action":   carryAction,
+	"retreats": true,
 });
 
 /**

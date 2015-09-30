@@ -11,7 +11,8 @@ module.exports = require("role-base")({
 	"definitions": [
 		[ TOUGH, MOVE, ATTACK, ATTACK ],
 	],
-	"action": leadAction,
+	"action":   leadAction,
+	"retreats": false,
 });
 
 /**

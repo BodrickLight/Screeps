@@ -11,7 +11,8 @@ module.exports = require("role-base")({
 	"definitions": [
 		[ MOVE, HEAL ],
 	],
-	"action": healAction,
+	"action":   healAction,
+	"retreats": false,
 });
 
 /**
@@ -19,24 +20,36 @@ module.exports = require("role-base")({
  * @param {Creep} creep The creep that should behave as a healer.
  */
 function healAction (creep) {
+	if (creep.hits < creep.hitsMax) {
+		// Heal itself first.
+		creep.heal(creep);
+		return;
+	}
+
 	const target = creep.room.find(FIND_MY_CREEPS, {
 		"filter": x => x.hits < x.hitsMax,
 	})[0];
 
 	if (target) {
 		creep.moveTo(target);
-		creep.heal(target);
-	} else {
-		// Return to the nearest leader.
-		const leader = creep.room.find(FIND_MY_CREEPS, {
-			"filter": x => x.memory.role === "leader",
-		})[0];
-
-		if (leader) {
-			creep.moveToRange(leader, 1);
+		if (creep.pos.isNearTo(target)) {
+			creep.heal(target);
 		} else {
-			// No available leaders, return to spawn.
-			creep.moveToSpawn(2);
+			creep.rangedHeal(target);
 		}
+
+		return;
+	}
+
+	// Return to the nearest leader.
+	const leader = creep.room.find(FIND_MY_CREEPS, {
+		"filter": x => x.memory.role === "leader",
+	})[0];
+
+	if (leader) {
+		creep.moveToRange(leader, 1);
+	} else {
+		// No available leaders, return to spawn.
+		creep.moveToSpawn(2);
 	}
 }

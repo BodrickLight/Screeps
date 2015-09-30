@@ -27,7 +27,6 @@ function placeRamparts (room) {
 	const spawns = room.find(FIND_MY_SPAWNS);
 	for (const spawn of spawns) {
 		constructAroundRange(room, spawn.pos, 5, STRUCTURE_RAMPART);
-		// constructAroundRange(room, spawn.pos, 6, STRUCTURE_RAMPART);
 	}
 }
 

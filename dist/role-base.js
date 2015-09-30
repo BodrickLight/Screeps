@@ -9,6 +9,7 @@ module.exports = function (cfg) {
 		"name":        cfg.name || "undefined",
 		"definitions": cfg.definitions || [],
 		"action":      cfg.action || _.noop,
+		"retreats":    cfg.retreats || false,
 	});
 
 	return {
@@ -46,11 +47,11 @@ module.exports = function (cfg) {
 			creep.memory.justSpawned = false;
 		}
 
-		if (!creep.body.some(x => x.type === ATTACK || x.type === RANGED_ATTACK || x.type === HEAL)) {
+		if (cfg.retreats) {
 			// This is a 'civilian' creep - if there's any enemies nearby, just return
 			// to spawn.
 			if (creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4, {
-				"filter": x => x.body.some(y => y.type === ATTACK || y.type === RANGED_ATTACK),
+				"filter": x => x.getActiveBodyparts(ATTACK) || x.getActiveBodyparts(RANGED_ATTACK),
 			}).length) {
 				creep.moveToSpawn(2);
 				return;

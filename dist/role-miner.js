@@ -11,7 +11,8 @@ module.exports = require("role-base")({
 	"definitions": [
 		[ WORK, WORK, MOVE ],
 	],
-	"action": mineAction,
+	"action":   mineAction,
+	"retreats": true,
 });
 
 /**
