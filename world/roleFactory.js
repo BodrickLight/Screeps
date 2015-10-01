@@ -27,8 +27,12 @@ function getNextRole (room) {
 		{ "role": "carrier",  "count": 2 },
 		{ "role": "miner",    "count": 2 },
 		{ "role": "carrier",  "count": 4 },
+		{ "role": "upgrader", "count": 1 },
+		{ "role": "courier",  "count": 2 },
 
 		{ "role": "builder",  "count": 4 },
+		{ "role": "upgrader", "count": 3 },
+		{ "role": "courier",  "count": 4 },
 	];
 
 	var creeps = _.values(Game.creeps).filter(x => x && x.room && x.room.name === room.name);

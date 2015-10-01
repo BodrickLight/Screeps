@@ -65,9 +65,13 @@ function buildAction (creep) {
 	}
 
 	// If any structures are below 5000 hitpoints, repair them.
-	const broken = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+	const broken = _.chain(creep.room.find(FIND_MY_STRUCTURES, {
 		"filter": x => x.hits < 5000 && x.hits !== x.hitsMax,
-	});
+	}))
+		.sortBy(x => x.hits)
+		.first()
+		.value();
+
 	if (broken) {
 		creep.say(`repair ${broken.structureType}`);
 		creep.memory.target = { "id": broken.id, "action": "repair" };
@@ -76,15 +80,10 @@ function buildAction (creep) {
 	}
 
 	// If there's anything to build, build it.
-	const toBuild = creep.room.findClosestByRange(FIND_CONSTRUCTION_SITES);
+	const toBuild = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
 	if (toBuild) {
 		creep.say(`build ${toBuild.structureType}`);
 		creep.memory.target = { "id": toBuild.id, "action": "build" };
 		buildAction(creep);
-		return;
 	}
-
-	// Move to the room controller to upgrade it.
-	creep.moveToRange(creep.room.controller, 1);
-	creep.upgradeController(creep.room.controller);
 }
