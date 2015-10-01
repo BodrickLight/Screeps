@@ -21,18 +21,14 @@ module.exports = require("role-base")({
  */
 function carryAction (creep) {
 	if (!creep.memory.target) {
-		// Associate ourselves with a miner.
-		var carriers = _.filter(Game.creeps, x => x.memory.role === "carrier"
-			&& x.memory.target);
-
-		var usedTargets = carriers.map(x => Game.getObjectById(x.memory.target.id));
-
-		var target = creep.pos.findClosestByRange(FIND_MY_CREEPS, {
-			"filter": s => s.memory.role === "miner" && usedTargets.indexOf(s) === -1,
-		});
+		// Find the largest stack of dropped energy.
+		var target = _.chain(creep.room.find(FIND_DROPPED_ENERGY))
+			.sortBy(x => x.energy)
+			.last()
+			.value();
 
 		if (!target) {
-			// No available miners.
+			// No available energy.
 			return;
 		}
 
@@ -43,7 +39,7 @@ function carryAction (creep) {
 		// Can still carry more energy, move to the target to pick it up.
 		var target = Game.getObjectById(creep.memory.target.id);
 		if (!target) {
-			// Our miner no longer exists. Try to find another.
+			// Our energy no longer exists. Try to find some more.
 			delete creep.memory.target;
 			carryAction(creep);
 			return;

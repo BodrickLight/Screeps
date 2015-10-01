@@ -41,7 +41,7 @@ function buildAction (creep) {
 		// Continue doing our previous job.
 		const target = Game.getObjectById(creep.memory.target.id);
 		const action = creep.memory.target.action;
-		if (!target || (action === "repair" && (target.hits >= 3000 || target.hits === target.hitsMax))) {
+		if (!target || (action === "repair" && (target.hits >= 10000 || target.hits === target.hitsMax))) {
 			// We're done; find something else to do.
 			delete creep.memory.target;
 			buildAction(creep);
@@ -57,9 +57,9 @@ function buildAction (creep) {
 		return;
 	}
 
-	// If any structures are below 1000 hitpoints, repair them.
+	// If any structures are below 5000 hitpoints, repair them.
 	const broken = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-		"filter": x => x.hits < 1000 && x.hits !== x.hitsMax,
+		"filter": x => x.hits < 5000 && x.hits !== x.hitsMax,
 	});
 	if (broken) {
 		creep.say(`repair ${broken.structureType}`);
