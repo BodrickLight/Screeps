@@ -76,7 +76,7 @@ function buildAction (creep) {
 	}
 
 	// If there's anything to build, build it.
-	const toBuild = _.sample(creep.room.find(FIND_CONSTRUCTION_SITES));
+	const toBuild = creep.room.findClosestByRange(FIND_CONSTRUCTION_SITES);
 	if (toBuild) {
 		creep.say(`build ${toBuild.structureType}`);
 		creep.memory.target = { "id": toBuild.id, "action": "build" };
