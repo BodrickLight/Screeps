@@ -37,6 +37,13 @@ function buildAction (creep) {
 		return;
 	}
 
+	// If the room controller is about to downgrade, drop everything to upgrade it.
+	if (creep.room.controller.ticksToDowngrade < 10000) {
+		creep.moveToRange(creep.room.controller, 1);
+		creep.upgradeController(creep.room.controller);
+		return;
+	}
+
 	if (creep.memory.target) {
 		// Continue doing our previous job.
 		const target = Game.getObjectById(creep.memory.target.id);
