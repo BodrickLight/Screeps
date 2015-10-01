@@ -77,8 +77,8 @@
 		"wrap-regex": 0,
 
 		// ECMASCRIPT 6
-		"prefer-const": 1,
-		"no-var": 2
+		"prefer-const": 0,
+		"no-var": 0
 
 		// LEGACY
 	}
