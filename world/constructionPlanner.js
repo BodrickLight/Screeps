@@ -13,7 +13,7 @@ module.exports = {
  * @param {Room} room The room in which construction should be managed.
  */
 function handleConstruction (room) {
-	if (!Game.time % 10) {
+	if (Game.time % 10) {
 		// Throttle, as this can be expensive.
 		return;
 	}
