@@ -23,23 +23,18 @@ function buildAction (creep) {
 		// Return to spawn to get energy.
 		delete creep.memory.target;
 		creep.moveToSpawn(1);
-		const spawn = creep.getSpawn();
-		spawn.transferEnergy(creep);
-		return;
-	}
-
-	// If the room controller is about to downgrade, drop everything to upgrade it.
-	if (creep.room.controller.ticksToDowngrade < 10000) {
-		creep.moveToRange(creep.room.controller, 1);
-		creep.upgradeController(creep.room.controller);
+		var spawn = creep.getSpawn();
+		if (spawn.energy >= 300) {
+			spawn.transferEnergy(creep);
+		}
 		return;
 	}
 
 	if (creep.memory.target) {
 		// Continue doing our previous job.
-		const target = Game.getObjectById(creep.memory.target.id);
-		const action = creep.memory.target.action;
-		if (!target || (action === "repair" && (target.hits >= 10000 || target.hits === target.hitsMax))) {
+		var target = Game.getObjectById(creep.memory.target.id);
+		var action = creep.memory.target.action;
+		if (!target || (action === "repair" && (target.hits === target.hitsMax))) {
 			// We're done; find something else to do.
 			delete creep.memory.target;
 			buildAction(creep);
@@ -56,7 +51,7 @@ function buildAction (creep) {
 	}
 
 	// If any structures are below half health, repair them.
-	const broken = _.chain(creep.room.find(FIND_MY_STRUCTURES, {
+	var broken = _.chain(creep.room.find(FIND_MY_STRUCTURES, {
 		"filter": x => (x.hits / x.hitsMax) < 0.5,
 	}))
 		.sortBy(x => x.hits)
@@ -71,10 +66,26 @@ function buildAction (creep) {
 	}
 
 	// If there's anything to build, build it.
-	const toBuild = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+	var toBuild = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
 	if (toBuild) {
 		creep.say(`build ${toBuild.structureType}`);
 		creep.memory.target = { "id": toBuild.id, "action": "build" };
 		buildAction(creep);
+		return;
+	}
+
+	// Repair walls if there's nothing else to do.
+	var wall = _.chain(creep.room.find(FIND_STRUCTURES, {
+		"filter": x => x.structureType === STRUCTURE_WALL && x.hits < x.hitsMax,
+	}))
+		.sortBy(x => x.hits)
+		.first()
+		.value();
+
+	if (wall) {
+		creep.say("build wall");
+		creep.memory.target = { "id": wall.id, "action": "repair" };
+		buildAction(creep);
+		return;
 	}
 }

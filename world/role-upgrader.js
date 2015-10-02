@@ -32,8 +32,10 @@ function upgradeAction (creep) {
 		// Return to spawn to get energy.
 		delete creep.memory.target;
 		creep.moveToSpawn(1);
-		const spawn = creep.getSpawn();
-		spawn.transferEnergy(creep);
+		var spawn = creep.getSpawn();
+		if (spawn.energy >= 300) {
+			spawn.transferEnergy(creep);
+		}
 		return;
 	}
 

@@ -13,57 +13,8 @@ module.exports = {
  * @param {Room} room The room in which construction should be managed.
  */
 function handleConstruction (room) {
-	// Disabled for now.
-	return;
-	if (Game.time % 10) {
-		// Throttle, as this can be expensive.
-		return;
-	}
-
-	if (room.controller.level >= 2 && room.controller.level < 5) {
-		placeWalls(room);
-	}
-
-	if (room.controller.level >= 5) {
-		placeRamparts(room);
-		// placeExtensions(room);
-	}
-
 	if (room.controller.level >= 3) {
 		placeRoads(room);
-	}
-}
-
-/**
- * Places walls in the given room.
- * @param {Room} room The room in which walls should be placed.
- */
-function placeWalls (room) {
-	var exits = room.find(FIND_EXIT);
-	for (var exit of exits) {
-		constructAroundRange(room, room.getPositionAt(exit.x, exit.y), 2, STRUCTURE_WALL);
-	}
-}
-
-/**
- * Places ramparts in the given room.
- * @param {Room} room The room in which ramparts should be placed.
- */
-function placeRamparts (room) {
-	var exits = room.find(FIND_EXIT);
-	for (var exit of exits) {
-		constructAroundRange(room, room.getPositionAt(exit.x, exit.y), 2, STRUCTURE_RAMPART);
-	}
-}
-
-/**
- * Places extensions in the given room.
- * @param {Room} room The room in which the extensions should be placed.
- */
-function placeExtensions (room) {
-	var spawns = room.find(FIND_MY_SPAWNS);
-	for (var spawn of spawns) {
-		constructAroundRange(room, spawn.pos, 2, STRUCTURE_EXTENSION);
 	}
 }
 
@@ -84,25 +35,5 @@ function placeRoads (room) {
 	})[0];
 	if (creep) {
 		room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
-	}
-}
-
-/**
- * Places the given construction type around the target position at a given
- * range.
- * @param {Room} room The room in which the construction should be placed.
- * @param {RoomPosition} center The position around which the constructions
- * should be placed.
- * @param {number} range The range at which constructions should be placed.
- * @param {string} type The type of construction to be placed.
- */
-function constructAroundRange (room, center, range, type) {
-	for (var x = center.x - range; x <= center.x + range; x++) {
-		for (var y = center.y - range; y <= center.y + range; y++) {
-			if (Math.abs(center.x - x) === range
-				|| Math.abs(center.y - y) === range) {
-				room.createConstructionSite(x, y, type);
-			}
-		}
 	}
 }
