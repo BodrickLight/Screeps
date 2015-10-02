@@ -50,7 +50,13 @@ function carryAction (creep) {
 		creep.pickup(energy);
 	} else {
 		// Full on energy - return to base to drop it off.
-		creep.moveToSpawn(1);
-		creep.transferEnergy(creep.getSpawn());
+		var target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+			"filter": x => x.energyCapacity && x.energy < x.energyCapacity,
+		});
+
+		if (target) {
+			creep.moveTo(target);
+			creep.transferEnergy(target);
+		}
 	}
 }
