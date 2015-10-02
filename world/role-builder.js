@@ -14,15 +14,6 @@ module.exports = require("role-base")({
 	"retreats": false,
 });
 
-const buildOrder = [
-	STRUCTURE_RAMPART,
-	STRUCTURE_WALL,
-	STRUCTURE_EXTENSION,
-	STRUCTURE_STORAGE,
-	STRUCTURE_ROAD,
-	STRUCTURE_LINK,
-];
-
 /**
  * Makes the specified creep behave as a builder.
  * @param {Creep} creep The creep that should behave as a builder.
@@ -64,9 +55,9 @@ function buildAction (creep) {
 		return;
 	}
 
-	// If any structures are below 5000 hitpoints, repair them.
+	// If any structures are below half health, repair them.
 	const broken = _.chain(creep.room.find(FIND_MY_STRUCTURES, {
-		"filter": x => x.hits < 5000 && x.hits !== x.hitsMax,
+		"filter": x => (x.hits / x.hitsMax) < 0.5,
 	}))
 		.sortBy(x => x.hits)
 		.first()

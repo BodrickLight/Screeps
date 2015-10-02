@@ -13,18 +13,35 @@ module.exports = {
  * @param {Room} room The room in which construction should be managed.
  */
 function handleConstruction (room) {
+	// Disabled for now.
+	return;
 	if (Game.time % 10) {
 		// Throttle, as this can be expensive.
 		return;
 	}
 
-	if (room.controller.level >= 2) {
+	if (room.controller.level >= 2 && room.controller.level < 5) {
+		placeWalls(room);
+	}
+
+	if (room.controller.level >= 5) {
 		placeRamparts(room);
 		// placeExtensions(room);
 	}
 
 	if (room.controller.level >= 3) {
 		placeRoads(room);
+	}
+}
+
+/**
+ * Places walls in the given room.
+ * @param {Room} room The room in which walls should be placed.
+ */
+function placeWalls (room) {
+	var exits = room.find(FIND_EXIT);
+	for (var exit of exits) {
+		constructAroundRange(room, room.getPositionAt(exit.x, exit.y), 2, STRUCTURE_WALL);
 	}
 }
 

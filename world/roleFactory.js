@@ -30,8 +30,6 @@ function getNextRole (room) {
 		{ "role": "upgrader", "count": 1 },
 		{ "role": "courier",  "count": 2 },
 
-		{ "role": "archer",   "count": 2 },
-
 		{ "role": "builder",  "count": 4 },
 		{ "role": "upgrader", "count": 3 },
 		{ "role": "courier",  "count": 4 },
