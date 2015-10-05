@@ -8,6 +8,7 @@
 module.exports = require("role-base")({
 	"name":        "upgrader",
 	"definitions": [
+		[ WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE ],
 		[ WORK, WORK, CARRY, MOVE ],
 	],
 	"action":   upgradeAction,
