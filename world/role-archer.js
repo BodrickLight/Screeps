@@ -8,6 +8,7 @@
 module.exports = require("role-base")({
 	"name":        "archer",
 	"definitions": [
+		[ MOVE, RANGED_ATTACK, RANGED_ATTACK ],
 		[ MOVE, RANGED_ATTACK ],
 	],
 	"action":   archAction,

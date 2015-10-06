@@ -8,6 +8,7 @@
 module.exports = require("role-base")({
 	"name":        "carrier",
 	"definitions": [
+		[ CARRY, MOVE, CARRY, MOVE, CARRY, MOVE],
 		[ CARRY, MOVE, CARRY, MOVE ],
 		[ CARRY, MOVE ],
 	],
