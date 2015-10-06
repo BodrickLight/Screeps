@@ -49,9 +49,8 @@ function courierAction (creep) {
 	} else {
 		// No energy - return to spawn to pick some up.
 		creep.moveToSpawn(1);
-		var spawn = creep.getSpawn();
-		if (spawn.energy >= 300) {
-			spawn.transferEnergy(creep);
+		if (creep.room.getStoredEnergy() >= 300) {
+			creep.getSpawn().transferEnergy(creep);
 		}
 	}
 }
