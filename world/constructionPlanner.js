@@ -31,7 +31,7 @@ function placeRoads (room) {
 	}
 
 	var creep = room.find(FIND_MY_CREEPS, {
-		"filter": x => x.fatigue > 1,
+		"filter": x => x.fatigue > 1 && x.memory.role !== "builder",
 	})[0];
 	if (creep) {
 		room.createConstructionSite(creep.pos, STRUCTURE_ROAD);

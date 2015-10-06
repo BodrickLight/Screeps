@@ -8,7 +8,7 @@
 module.exports = require("role-base")({
 	"name":        "carrier",
 	"definitions": [
-		[ CARRY, MOVE, CARRY, MOVE, CARRY, MOVE],
+		[ CARRY, MOVE, CARRY, MOVE, CARRY, MOVE ],
 		[ CARRY, MOVE, CARRY, MOVE ],
 		[ CARRY, MOVE ],
 	],
@@ -22,10 +22,17 @@ module.exports = require("role-base")({
  */
 function carryAction (creep) {
 	if (creep.carry.energy) {
-		// We've got some energy - return to base to drop it off.
+		// We've got some energy - return to a spawn or extension to drop it off.
 		var target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-			"filter": x => (x.energyCapacity && x.energy < x.energyCapacity) || (x.storeCapacity && x.store.energy < x.storeCapacity),
+			"filter": x => x.energyCapacity && x.energy < x.energyCapacity,
 		});
+
+		if (!target) {
+			// No available spawns or extensions, try to use a store.
+			target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+				"filter": x => x.storeCapacity && x.store.energy < x.storeCapacity,
+			});
+		}
 
 		if (target) {
 			creep.moveTo(target);

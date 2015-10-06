@@ -5,7 +5,6 @@
  */
 
 require("creepExt");
-require("roomExt");
 var roleFactory = require("roleFactory");
 var constructionPlanner = require("constructionPlanner");
 

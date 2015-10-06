@@ -30,12 +30,12 @@ const buildOrder = [
  */
 function upgradeAction (creep) {
 	if (!creep.carry.energy) {
-		// Return to spawn to get energy.
+		// Return to a store to get energy.
 		delete creep.memory.target;
-		creep.moveToSpawn(1);
-		var spawn = creep.getSpawn();
-		if (creep.room.getStoredEnergy() >= 300) {
-			creep.getSpawn().transferEnergy(creep);
+		var store = creep.getEnergyStore();
+		creep.moveTo(store);
+		if (creep.room.energyAvailable >= 300) {
+			store.transferEnergy(creep);
 		}
 		return;
 	}

@@ -5,9 +5,10 @@
  */
 
 _.assign(Creep.prototype, {
-	"moveToSpawn": moveToSpawn,
-	"moveToRange": moveToRange,
-	"getSpawn":    getSpawn,
+	"moveToSpawn":    moveToSpawn,
+	"moveToRange":    moveToRange,
+	"getSpawn":       getSpawn,
+	"getEnergyStore": getEnergyStore,
 });
 
 /**
@@ -47,4 +48,19 @@ function moveToRange (target, range) {
  */
 function getSpawn () {
 	return Game.getObjectById(this.memory.spawn);
+}
+
+/**
+ * Get the closest appropriate energy store from which energy should be
+ * drawn.
+ * @returns {Structure} The energy store from which energy should be drawn.
+ */
+function getEnergyStore () {
+	if (this.room.storage && this.room.storage.store.energy) {
+		return this.room.storage;
+	}
+
+	return this.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+		"filter": x => x.energyCapacity && x.energy,
+	});
 }
