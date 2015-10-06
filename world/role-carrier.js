@@ -24,7 +24,7 @@ function carryAction (creep) {
 	if (creep.carry.energy) {
 		// We've got some energy - return to base to drop it off.
 		var target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-			"filter": x => x.energyCapacity && x.energy < x.energyCapacity,
+			"filter": x => (x.energyCapacity && x.energy < x.energyCapacity) || (x.storeCapacity && x.store.energy < x.storeCapacity),
 		});
 
 		if (target) {
@@ -38,7 +38,9 @@ function carryAction (creep) {
 
 	if (!creep.memory.target) {
 		// Find the closest dropped energy.
-		var target = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY);
+		var target = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY, {
+			"filter": x => x.energy > 50,
+		});
 
 		if (!target) {
 			// No available energy.
