@@ -27,9 +27,7 @@ function captureAction (creep) {
 	if (!creep.memory.target) {
 		creep.memory.roomId = creep.room.id;
 
-		var controller = creep.room.pos.findClosestByPath(FIND_ROOM_CONTROLLERS, {
-			"filter": x => !x.owner,
-		});
+		var controller = creep.room.controller;
 		if (controller) {
 			creep.memory.target = controller.id;
 		} else {

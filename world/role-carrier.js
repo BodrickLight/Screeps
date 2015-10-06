@@ -37,11 +37,8 @@ function carryAction (creep) {
 	}
 
 	if (!creep.memory.target) {
-		// Find the largest stack of dropped energy.
-		var target = _.chain(creep.room.find(FIND_DROPPED_ENERGY))
-			.sortBy(x => x.energy)
-			.last()
-			.value();
+		// Find the closest dropped energy.
+		var target = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY);
 
 		if (!target) {
 			// No available energy.
