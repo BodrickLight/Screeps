@@ -22,7 +22,14 @@ function loop () {
 		var role = require("role-" + nextRole);
 		var creepDefinition = role.getCreepDefinition(spawn);
 		if (spawn.canCreateCreep(creepDefinition) === OK) {
-			spawn.createCreep(creepDefinition, undefined, {
+			var idx = 0;
+			var name = "";
+			do {
+				idx++;
+				name = role.name + "-" + idx;
+			} while (Game.creeps[name])
+
+			spawn.createCreep(creepDefinition, name, {
 				"role":        role.name,
 				"justSpawned": true,
 				"spawn":       spawn.id,
@@ -37,6 +44,8 @@ function loop () {
 		if (creep.memory.role) {
 			var role = require("role-" + creep.memory.role);
 			role.action(creep);
+		} else {
+			creep.suicide();
 		}
 	}
 
