@@ -54,7 +54,7 @@ function buildAction (creep) {
 
 	// If any structures are below half health, repair them.
 	var broken = _.chain(creep.room.find(FIND_STRUCTURES, {
-		"filter": x => (x.my || x.structureType === STRUCTURE_ROAD) && x.hits < 500000 && (x.hits / x.hitsMax) < 0.5,
+		"filter": x => (x.my || x.structureType === STRUCTURE_ROAD) && x.hits < 100000 && (x.hits / x.hitsMax) < 0.5,
 	}))
 		.sortBy(x => x.hits)
 		.first()
