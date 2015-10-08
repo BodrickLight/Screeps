@@ -41,11 +41,6 @@ module.exports = function (cfg) {
 	 */
 	function action (creep) {
 		var t1 = new Date().getTime();
-		// If a creep has just spawned, make it say its role.
-		if (!creep.spawning && creep.memory && creep.memory.justSpawned) {
-			creep.say(creep.memory.role);
-			creep.memory.justSpawned = false;
-		}
 
 		if (cfg.retreats) {
 			// This is a 'civilian' creep - if there's any enemies nearby, just return
@@ -61,7 +56,7 @@ module.exports = function (cfg) {
 		cfg.action(creep);
 		var t2 = new Date().getTime();
 		if ((t2 - t1) > 3) {
-			console.log(`${creep.memory.role}: ${t2 - t1}ms`);
+			console.log(`${creep.name}: ${t2 - t1}ms`);
 		}
 	}
 };

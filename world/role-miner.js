@@ -22,7 +22,7 @@ module.exports = require("role-base")({
 function mineAction (creep) {
 	if (!creep.memory.source) {
 		// Find a suitable source.
-		var miners = _.filter(Game.creeps, x => x.memory.role === "miner" && x.memory.source);
+		var miners = _.filter(Game.creeps, x => x.getRole() === "miner" && x.memory.source);
 		var sources = miners.map(x => x.memory.source.id);
 
 		var target = creep.room.find(FIND_SOURCES, {

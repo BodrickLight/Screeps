@@ -24,7 +24,7 @@ function courierAction (creep) {
 	if (!creep.memory.target) {
 		// Find an upgrader or builder who needs energy.
 		var target = creep.room.find(FIND_MY_CREEPS, {
-			"filter": x => (x.memory.role === "upgrader" || x.memory.role === "builder") && x.carry.energy < x.carryCapacity,
+			"filter": x => (x.getRole() === "upgrader" || x.getRole() === "builder") && x.carry.energy < x.carryCapacity,
 		})[0];
 
 		if (!target) {

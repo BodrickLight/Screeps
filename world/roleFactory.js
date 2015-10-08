@@ -42,7 +42,7 @@ function getNextRole (room) {
 	];
 
 	var creeps = _.values(Game.creeps).filter(x => x && x.room && x.room.name === room.name);
-	var types = _.groupBy(creeps, x => x && x.memory && x.memory.role);
+	var types = _.groupBy(creeps, x => x && x.memory && x.getRole());
 	for (var item of order) {
 		if (!types[item.role] || types[item.role].length < item.count) {
 			return item.role;

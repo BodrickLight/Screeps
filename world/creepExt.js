@@ -9,6 +9,7 @@ _.assign(Creep.prototype, {
 	"moveToRange":    moveToRange,
 	"getSpawn":       getSpawn,
 	"getEnergyStore": getEnergyStore,
+	"getRole":        getRole,
 });
 
 /**
@@ -63,4 +64,12 @@ function getEnergyStore () {
 	return this.pos.findClosestByRange(FIND_MY_STRUCTURES, {
 		"filter": x => x.energyCapacity && x.energy,
 	});
+}
+
+/**
+ * Get this creep's role.
+ * @returns {string} The role of this creep.
+ */
+function getRole () {
+	return this.name.split("-")[0];
 }
