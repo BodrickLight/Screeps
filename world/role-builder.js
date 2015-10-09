@@ -8,8 +8,8 @@
 module.exports = require("role-base")({
 	"name":        "builder",
 	"definitions": [
-		[ WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE ],
-		[ WORK, WORK, WORK, CARRY, CARRY, MOVE ],
+		[ WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE ],
+		[ WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE ],
 		[ WORK, WORK, CARRY, MOVE ],
 	],
 	"action":   buildAction,

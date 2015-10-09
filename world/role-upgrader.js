@@ -8,21 +8,13 @@
 module.exports = require("role-base")({
 	"name":        "upgrader",
 	"definitions": [
-		[ WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE ],
+		[ WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE ],
+		[ WORK, WORK, CARRY, MOVE, WORK, WORK, CARRY, MOVE ],
 		[ WORK, WORK, CARRY, MOVE ],
 	],
 	"action":   upgradeAction,
 	"retreats": false,
 });
-
-const buildOrder = [
-	STRUCTURE_RAMPART,
-	STRUCTURE_WALL,
-	STRUCTURE_EXTENSION,
-	STRUCTURE_STORAGE,
-	STRUCTURE_ROAD,
-	STRUCTURE_LINK,
-];
 
 /**
  * Makes the specified creep behave as an upgrader.

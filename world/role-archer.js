@@ -20,7 +20,7 @@ module.exports = require("role-base")({
  * @param {Creep} creep The creep that should behave as an archer.
  */
 function archAction (creep) {
-	const target = getTarget(creep);
+	var target = getTarget(creep);
 
 	if (target) {
 		// Move to a rampart near the target.
@@ -28,7 +28,7 @@ function archAction (creep) {
 			// We're ok in this rampart for now.
 		} else {
 			// Find a closer rampart.
-			const rampart = target.pos.findInRange(FIND_MY_STRUCTURES, 3, {
+			var rampart = target.pos.findInRange(FIND_MY_STRUCTURES, 3, {
 				"filter": x => x.structureType === STRUCTURE_RAMPART
 					&& !x.pos.lookFor("creep").length
 					&& !x.progressTotal,
