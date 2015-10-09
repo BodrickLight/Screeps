@@ -9,6 +9,9 @@
 module.exports = require("role-base")({
 	"name":        "miner",
 	"definitions": [
+		[ WORK, WORK, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY ],
+		[ WORK, WORK, MOVE, CARRY, CARRY, CARRY, CARRY ],
+		[ WORK, WORK, MOVE, CARRY, CARRY ],
 		[ WORK, WORK, MOVE ],
 	],
 	"action":   mineAction,
@@ -36,4 +39,7 @@ function mineAction (creep) {
 	var target = Game.getObjectById(creep.memory.source.id);
 	creep.moveToRange(target, 1);
 	creep.harvest(target);
+	// Pick up any energy we're standing on (in case we've been emptied,
+	// but there's still energy on the ground.)
+	creep.pickup(creep.pos);
 }

@@ -23,6 +23,7 @@ module.exports = require("role-base")({
  */
 function carryAction (creep) {
 	if (creep.carry.energy) {
+		delete creep.memory.target;
 		// We've got some energy - return to a spawn or extension to drop it off.
 		var target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
 			"filter": x => x.energyCapacity && x.energy < x.energyCapacity,
@@ -51,8 +52,14 @@ function carryAction (creep) {
 		});
 
 		if (!target) {
-			// No available energy.
-			return;
+			// No dropped energy - check to see if any miners are carrying any.
+			target = creep.pos.findClosestByRange(FIND_MY_CREEPS, {
+				"filter": x => x.getRole() === "miner" && x.carry.energy > 50,
+			});
+			if (!target) {
+				// No available energy.
+				return;
+			}
 		}
 
 		creep.memory.target = { "id": target.id };
@@ -70,4 +77,8 @@ function carryAction (creep) {
 	creep.moveToRange(target, 1);
 	var energy = target.pos.lookFor("energy")[0];
 	creep.pickup(energy);
+	var miner = target.pos.lookFor("creep")[0];
+	if (miner) {
+		miner.transferEnergy(creep);
+	}
 }
