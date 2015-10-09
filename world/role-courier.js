@@ -24,9 +24,9 @@ module.exports = require("role-base")({
 function courierAction (creep) {
 	if (!creep.memory.target) {
 		// Find an upgrader or builder who needs energy.
-		var target = creep.room.find(FIND_MY_CREEPS, {
-			"filter": x => (x.getRole() === "upgrader" || x.getRole() === "builder") && x.carry.energy < x.carryCapacity,
-		})[0];
+		var target = creep.pos.findClosestByRange(FIND_MY_CREEPS, {
+			"filter": x => (x.getRole() === "upgrader" || x.getRole() === "builder") && (x.carry.energy / x.carryCapacity) < 0.9,
+		});
 
 		if (!target) {
 			// No available targets.
